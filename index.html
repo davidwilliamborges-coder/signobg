@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra seu Signo</title>
+    <!-- Bootstrap 5 + ícones -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Estilos próprios – além do Bootstrap */
+        body {
+            background: linear-gradient(145deg, #f8f0e7 0%, #e6d5c0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 1.5rem;
+        }
+
+        .card-signo {
+            background: rgba(255, 247, 240, 0.85);
+            backdrop-filter: blur(6px);
+            border: none;
+            border-radius: 3rem 1rem 3rem 1rem;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.35);
+            transition: transform 0.2s ease;
+            max-width: 680px;
+            width: 100%;
+            padding: 1.8rem 2.2rem 2.8rem;
+        }
+
+        .card-signo:hover {
+            transform: scale(1.01);
+        }
+
+        .titulo-principal {
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #3e2c1b;
+            border-left: 6px solid #b68b6b;
+            padding-left: 1rem;
+            font-size: 2.3rem;
+        }
+
+        .subtitulo {
+            color: #6a4f34;
+            font-weight: 400;
+            font-size: 1rem;
+            border-bottom: 2px dashed #dac2ae;
+            padding-bottom: 0.6rem;
+        }
+
+        .btn-descobrir {
+            background: #7f5a3e;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 2.2rem;
+            border-radius: 40px;
+            letter-spacing: 0.5px;
+            transition: all 0.25s;
+            color: #fef6ed;
+            box-shadow: 0 6px 0 #4d3422;
+        }
+
+        .btn-descobrir:hover {
+            background: #9d7353;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 0 #4d3422;
+            color: white;
+        }
+
+        .btn-descobrir:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #4d3422;
+        }
+
+        .form-control {
+            border-radius: 30px;
+            border: 1px solid #d6bcab;
+            background: #fffbf7;
+            padding: 0.7rem 1.2rem;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: #b68b6b;
+            box-shadow: 0 0 0 0.25rem rgba(182, 139, 107, 0.3);
+        }
+
+        .form-label i {
+            color: #7f5a3e;
+            margin-right: 6px;
+        }
+
+        /* Página de resultado (inicialmente escondida) */
+        #paginaResultado {
+            display: none;
+        }
+
+        #paginaInicial {
+            display: block;
+        }
+
+        .icone-signo {
+            font-size: 3.2rem;
+            color: #7f5a3e;
+            background: #ede0d3;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-info-signo {
+            background: #fcf6ef;
+            border-radius: 2rem 0.5rem 2rem 0.5rem;
+            padding: 1.5rem 1.8rem;
+            border: 1px solid #e2d0c0;
+        }
+
+        .btn-voltar {
+            background: transparent;
+            border: 2px solid #7f5a3e;
+            color: #7f5a3e;
+            font-weight: 600;
+            border-radius: 40px;
+            padding: 0.4rem 1.6rem;
+            transition: 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background: #7f5a3e;
+            color: white;
+        }
+
+        .atributo-signo {
+            background: white;
+            border-radius: 30px;
+            padding: 0.15rem 1rem;
+            display: inline-block;
+            font-size: 0.9rem;
+            border: 1px solid #dccbbc;
+        }
+
+        footer small {
+            color: #5a4635;
+            opacity: 0.7;
+        }
+
+        /* responsividade */
+        @media (max-width: 480px) {
+            .card-signo {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .titulo-principal {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card-signo">
+
+        <!-- ========== PÁGINA INICIAL ========== -->
+        <div id="paginaInicial">
+            <div class="d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-stars fs-1" style="color: #7f5a3e;"></i>
+                <h1 class="titulo-principal mb-0">Signo<span style="font-weight:300;">Scope</span></h1>
+            </div>
+            <p class="subtitulo mb-4"><i class="bi bi-calendar3 me-2"></i>Descubra seu signo zodiacal pela data de
+                nascimento</p>
+
+            <form id="formSigno">
+                <div class="mb-4">
+                    <label for="dataNascimento" class="form-label fw-semibold" style="color: #3e2c1b;">
+                        <i class="bi bi-calendar-event"></i> Data de nascimento
+                    </label>
+                    <input type="date" class="form-control" id="dataNascimento" required max="2026-12-31"
+                        min="1900-01-01" value="2000-01-01">
+                    <div class="form-text mt-2" style="color: #6a4f34;">
+                        <i class="bi bi-info-circle"></i> Selecione o dia, mês e ano.
+                    </div>
+                </div>
+
+                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                    <button type="submit" class="btn btn-descobrir px-5 py-2">
+                        <i class="bi bi-compass me-2"></i>Descobrir signo
+                    </button>
+                </div>
+            </form>
+
+            <hr class="my-4" style="border-top: 2px dashed #dccbbc;">
+            <footer class="text-center">
+                <small><i class="bi bi-emoji-smile"></i> A astrologia é uma arte simbólica • divirta-se</small>
+            </footer>
+        </div>
+
+        <!-- ========== PÁGINA DE RESULTADO ========== -->
+        <div id="paginaResultado">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <button class="btn btn-voltar" id="btnVoltar">
+                    <i class="bi bi-arrow-left me-1"></i> Voltar
+                </button>
+                <span class="atributo-signo" id="signoDataInfo"><i class="bi bi-calendar2-week me-1"></i> 00/00</span>
+            </div>
+
+            <div class="text-center">
+                <div class="icone-signo" id="iconeSigno">♈</div>
+                <h2 class="display-6 fw-bold" style="color: #3e2c1b;" id="nomeSigno">Áries</h2>
+            </div>
+
+            <div class="card-info-signo mt-3">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p><i class="bi bi-calendar-range me-2" style="color:#7f5a3e;"></i> <strong>Período</strong><br>
+                            <span id="periodoSigno">21/03 – 19/04</span>
+                        </p>
+                        <p><i class="bi bi-gem me-2" style="color:#7f5a3e;"></i> <strong>Elemento</strong><br>
+                            <span id="elementoSigno">Fogo</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><i class="bi bi-planet me-2" style="color:#7f5a3e;"></i> <strong>Regente</strong><br>
+                            <span id="regenteSigno">Marte</span>
+                        </p>
+                        <p><i class="bi bi-palette me-2" style="color:#7f5a3e;"></i> <strong>Cor</strong><br>
+                            <span id="corSigno">Vermelho</span>
+                        </p>
+                    </div>
+                    <div class="col-12">
+                        <p><i class="bi bi-chat-quote me-2" style="color:#7f5a3e;"></i>
+                            <strong>Característica</strong><br>
+                            <span id="caracteristicaSigno" style="font-style: italic;">Ousado, enérgico e
+                                impulsivo.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <span class="badge bg-light text-dark border px-3 py-2"
+                    style="border-radius: 30px; border-color: #c6b09c !important;">
+                    <i class="bi bi-star-fill text-warning me-1"></i> Signo solar
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (para funcionamento opcional de toggles, etc) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        (function () {
+            // ---------- BASE DE DADOS DOS SIGNOS ----------
+            const signos = [
+                {
+                    nome: "Áries",
+                    emoji: "♈",
+                    inicio: "21/03",
+                    fim: "19/04",
+                    elemento: "Fogo",
+                    regente: "Marte",
+                    cor: "Vermelho",
+                    caracteristica: "Ousado, enérgico e impulsivo.",
+                    mesInicio: 3, diaInicio: 21, mesFim: 4, diaFim: 19
+                },
+                {
+                    nome: "Touro",
+                    emoji: "♉",
+                    inicio: "20/04",
+                    fim: "20/05",
+                    elemento: "Terra",
+                    regente: "Vênus",
+                    cor: "Verde",
+                    caracteristica: "Persistente, sensível e prático.",
+                    mesInicio: 4, diaInicio: 20, mesFim: 5, diaFim: 20
+                },
+                {
+                    nome: "Gêmeos",
+                    emoji: "♊",
+                    inicio: "21/05",
+                    fim: "20/06",
+                    elemento: "Ar",
+                    regente: "Mercúrio",
+                    cor: "Amarelo",
+                    caracteristica: "Comunicativo, curioso e versátil.",
+                    mesInicio: 5, diaInicio: 21, mesFim: 6, diaFim: 20
+                },
+                {
+                    nome: "Câncer",
+                    emoji: "♋",
+                    inicio: "21/06",
+                    fim: "22/07",
+                    elemento: "Água",
+                    regente: "Lua",
+                    cor: "Prata",
+                    caracteristica: "Emocional, intuitivo e protetor.",
+                    mesInicio: 6, diaInicio: 21, mesFim: 7, diaFim: 22
+                },
+                {
+                    nome: "Leão",
+                    emoji: "♌",
+                    inicio: "23/07",
+                    fim: "22/08",
+                    elemento: "Fogo",
+                    regente: "Sol",
+                    cor: "Dourado",
+                    caracteristica: "Criativo, leal e extrovertido.",
+                    mesInicio: 7, diaInicio: 23, mesFim: 8, diaFim: 22
+                },
+                {
+                    nome: "Virgem",
+                    emoji: "♍",
+                    inicio: "23/08",
+                    fim: "22/09",
+                    elemento: "Terra",
+                    regente: "Mercúrio",
+                    cor: "Azul-claro",
+                    caracteristica: "Analítico, organizado e dedicado.",
+                    mesInicio: 8, diaInicio: 23, mesFim: 9, diaFim: 22
+                },
+                {
+                    nome: "Libra",
+                    emoji: "♎",
+                    inicio: "23/09",
+                    fim: "22/10",
+                    elemento: "Ar",
+                    regente: "Vênus",
+                    cor: "Rosa",
+                    caracteristica: "Diplomático, social e justo.",
+                    mesInicio: 9, diaInicio: 23, mesFim: 10, diaFim: 22
+                },
+                {
+                    nome: "Escorpião",
+                    emoji: "♏",
+                    inicio: "23/10",
+                    fim: "21/11",
+                    elemento: "Água",
+                    regente: "Plutão",
+                    cor: "Vermelho-escuro",
+                    caracteristica: "Intenso, apaixonado e misterioso.",
+                    mesInicio: 10, diaInicio: 23, mesFim: 11, diaFim: 21
+                },
+                {
+                    nome: "Sagitário",
+                    emoji: "♐",
+                    inicio: "22/11",
+                    fim: "21/12",
+                    elemento: "Fogo",
+                    regente: "Júpiter",
+                    cor: "Roxo",
+                    caracteristica: "Otimista, aventureiro e sincero.",
+                    mesInicio: 11, diaInicio: 22, mesFim: 12, diaFim: 21
+                },
+                {
+                    nome: "Capricórnio",
+                    emoji: "♑",
+                    inicio: "22/12",
+                    fim: "19/01",
+                    elemento: "Terra",
+                    regente: "Saturno",
+                    cor: "Cinza",
+                    caracteristica: "Disciplinado, ambicioso e paciente.",
+                    mesInicio: 12, diaInicio: 22, mesFim: 1, diaFim: 19
+                },
+                {
+                    nome: "Aquário",
+                    emoji: "♒",
+                    inicio: "20/01",
+                    fim: "18/02",
+                    elemento: "Ar",
+                    regente: "Urano",
+                    cor: "Azul",
+                    caracteristica: "Inovador, humanitário e independente.",
+                    mesInicio: 1, diaInicio: 20, mesFim: 2, diaFim: 18
+                },
+                {
+                    nome: "Peixes",
+                    emoji: "♓",
+                    inicio: "19/02",
+                    fim: "20/03",
+                    elemento: "Água",
+                    regente: "Netuno",
+                    cor: "Lilás",
+                    caracteristica: "Empático, artístico e sonhador.",
+                    mesInicio: 2, diaInicio: 19, mesFim: 3, diaFim: 20
+                }
+            ];
+
+            // ---------- ELEMENTOS DO DOM ----------
+            const paginaInicial = document.getElementById('paginaInicial');
+            const paginaResultado = document.getElementById('paginaResultado');
+            const form = document.getElementById('formSigno');
+            const dataInput = document.getElementById('dataNascimento');
+
+            // Elementos do resultado
+            const nomeSignoEl = document.getElementById('nomeSigno');
+            const iconeSignoEl = document.getElementById('iconeSigno');
+            const periodoSignoEl = document.getElementById('periodoSigno');
+            const elementoSignoEl = document.getElementById('elementoSigno');
+            const regenteSignoEl = document.getElementById('regenteSigno');
+            const corSignoEl = document.getElementById('corSigno');
+            const caracteristicaSignoEl = document.getElementById('caracteristicaSigno');
+            const signoDataInfoEl = document.getElementById('signoDataInfo');
+            const btnVoltar = document.getElementById('btnVoltar');
+
+            // ---------- FUNÇÃO PARA DETERMINAR O SIGNO ----------
+            function getSigno(dia, mes) {
+                // Para cada signo, verifica se a data está dentro do intervalo
+                for (let signo of signos) {
+                    let { mesInicio, diaInicio, mesFim, diaFim } = signo;
+
+                    // Ajuste para o caso do signo que passa pelo ano novo (Capricórnio: 22/12 a 19/01)
+                    if (mesInicio > mesFim || (mesInicio === mesFim && diaInicio > diaFim)) {
+                        // Exemplo: Capricórnio (início 22/12, fim 19/01)
+                        // Se (mes === 12 e dia >= 22) ou (mes === 1 e dia <= 19)
+                        if ((mes === mesInicio && dia >= diaInicio) || (mes === mesFim && dia <= diaFim)) {
+                            return signo;
+                        }
+                    } else {
+                        // Intervalo normal (mesInicio/mesFim, sem atravessar ano)
+                        // Se (mes > mesInicio e mes < mesFim) ou (mes == mesInicio e dia >= diaInicio) ou (mes == mesFim e dia <= diaFim)
+                        if ((mes > mesInicio && mes < mesFim) ||
+                            (mes === mesInicio && dia >= diaInicio) ||
+                            (mes === mesFim && dia <= diaFim)) {
+                            return signo;
+                        }
+                    }
+                }
+                // fallback (nunca deve ocorrer)
+                return signos[0];
+            }
+
+            // ---------- FUNÇÃO PARA ATUALIZAR A PÁGINA DE RESULTADO ----------
+            function mostrarResultado(dataNasc) {
+                if (!dataNasc) return;
+
+                const partes = dataNasc.split('-');
+                const ano = parseInt(partes[0]);
+                const mes = parseInt(partes[1]);
+                const dia = parseInt(partes[2]);
+
+                const signo = getSigno(dia, mes);
+                if (!signo) return;
+
+                // Preencher os campos
+                nomeSignoEl.textContent = signo.nome;
+                iconeSignoEl.textContent = signo.emoji;
+                periodoSignoEl.textContent = `${signo.inicio} – ${signo.fim}`;
+                elementoSignoEl.textContent = signo.elemento;
+                regenteSignoEl.textContent = signo.regente;
+                corSignoEl.textContent = signo.cor;
+                caracteristicaSignoEl.textContent = signo.caracteristica;
+
+                // Mostrar a data no badge
+                const diaStr = String(dia).padStart(2, '0');
+                const mesStr = String(mes).padStart(2, '0');
+                signoDataInfoEl.innerHTML = `<i class="bi bi-calendar2-week me-1"></i> ${diaStr}/${mesStr}`;
+
+                // Trocar visibilidade
+                paginaInicial.style.display = 'none';
+                paginaResultado.style.display = 'block';
+            }
+
+            // ---------- EVENTO DE SUBMISSÃO DO FORM ----------
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const dataValue = dataInput.value;
+                if (!dataValue) {
+                    alert('Por favor, selecione uma data de nascimento.');
+                    return;
+                }
+                mostrarResultado(dataValue);
+            });
+
+            // ---------- BOTÃO VOLTAR ----------
+            btnVoltar.addEventListener('click', function () {
+                paginaResultado.style.display = 'none';
+                paginaInicial.style.display = 'block';
+                // (opcional) limpa o campo ou mantém a data
+            });
+
+            // ---------- (BÔNUS) EXEMPLO INICIAL CARREGADO ----------
+            // Para demonstração, ao carregar a página já mostra um resultado? 
+            // Mas a proposta é iniciar com a página inicial. 
+            // Deixamos a data com valor padrão 2000-01-01 (já definido no HTML)
+            // Nada mais é feito.
+
+        })();
+    </script>
+
+</body>
+
+</html>
